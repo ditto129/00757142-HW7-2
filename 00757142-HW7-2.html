@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Local Storage</title>
+    <style type="text/CSS">
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            background-color: lightblue;
+            font-family: Perpetua;
+        }
+
+        table, td, th {
+            border: 1px solid black;
+            padding: 4px;
+        }
+
+        th {
+            text-align: center;
+            color: white;
+            background-color: darkblue;
+        }
+
+        tr.oddrow {
+            background-color: white;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        // TODO
+        let add_button;
+        let remove_button;
+
+        function start() {
+            add_button = document.getElementById("addButton");
+            add_button.addEventListener("click", addItem, false);
+            remove_button = document.getElementById("removeAllButton");
+            remove_button.addEventListener("click", clearAll, false);
+            for (let i = 0; i < localStorage.length; i++) {
+                if (localStorage.key(i).toString().startsWith("ntou-")) {
+                    showItem(localStorage.getItem(localStorage.key(i)));
+                }
+            }
+        }
+
+        function Book(title, authors, year, url) {
+            this.title = title;
+            this.authors = authors;
+            this.year = year;
+            this.url = url;
+        }
+
+        function addItem() {
+            let book = new Book(
+                document.getElementById("title").value,
+                document.getElementById("authors").value,
+                document.getElementById("year").value,
+                document.getElementById("url").value
+            )
+            let key = new Date();
+            localStorage.setItem("ntou-" + key.getTime(), JSON.stringify(book));
+            showItem(JSON.stringify(book));
+        }
+
+        function showItem(book) {
+            book = JSON.parse(book);
+            let table_body = document.getElementById("tbody");
+            table_body.innerHTML += "<tr><td>" + book['title'] + "</td>" +
+                "<td>" + book['authors'] + "</td>" +
+                "<td>" + book['year'] + "</td>" +
+                "<td>" + "<a href=\"" + book['url'] + "\" target=\"_blank\">" + book['url'] + "</td></tr>";
+        }
+
+        function clearAll() {
+            localStorage.clear();
+            let table_body = document.getElementById("tbody");
+            table_body.innerHTML = "";
+            alert("All items were removed!");
+        }
+
+        window.addEventListener("load", start, false);
+    </script>
+</head>
+
+<body>
+    <a href="">GitHub Link</a>
+    <form action="#">
+        <p>
+            <label>Book Title:</label>
+            <input type="text" value="" id="title">
+            <label>Author(s):</label>
+            <input type="text" value="" id="authors">
+            <label>Year:</label>
+            <input type="number" value="" id="year">
+            <label>Book URL:</label>
+            <input type="url" value="" id="url">
+        </p>
+        <p>
+            <input type="button" value="Add New Item" id="addButton">
+            <input type="button" value="Remove All Items" id="removeAllButton">
+        </p>
+    </form>
+    <hr>
+    <div id="display">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
